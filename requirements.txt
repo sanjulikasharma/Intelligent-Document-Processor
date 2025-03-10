@@ -1,0 +1,10 @@
+google-generativeai 
+python-dotenv
+editdistance
+chromadb
+langchain
+streamlit
+sentence_transformers
+langchain-chroma>=0.1.2
+langchain-huggingface
+
