@@ -7,4 +7,4 @@ streamlit
 sentence_transformers
 langchain-chroma>=0.1.2
 langchain-huggingface
-
+werkzeug
