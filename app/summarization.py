@@ -2,7 +2,7 @@ import google.generativeai as genai
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-from pdf_to_text_extraction import get_api_key  # Import get_api_key
+from pdf_to_text_extraction import get_api_key  
 
 def summarize_text(text, api_key):
     """Summarizes the given text using Gemini."""
@@ -20,11 +20,11 @@ def summarize_text(text, api_key):
 
 def main():
     """Main function to demonstrate text summarization."""
-    output_dir = Path("output")  # The output directory
-    input_text_path = output_dir / "extracted_text.txt"  # Path to the extracted text.
-    summary_path = output_dir / "summary.txt"  # Path to save summary.
+    output_dir = Path("output")  
+    input_text_path = output_dir / "extracted_text.txt"  
+    summary_path = output_dir / "summary.txt"  
 
-    load_dotenv()  # Load the .env file
+    load_dotenv()  
 
     try:
         api_key = get_api_key()  # Use get_api_key from pdf_to_text_extraction

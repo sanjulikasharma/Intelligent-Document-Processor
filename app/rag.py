@@ -1,5 +1,5 @@
 import os
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from dotenv import load_dotenv
@@ -18,8 +18,8 @@ def load_and_chunk_text(file_path):
         with open(file_path, "r", encoding="utf-8") as f:
             text = f.read()
 
-        # Chunk text into smaller parts using CharacterTextSplitter
-        text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+        # Chunk text into smaller parts using RecursiveCharacterTextSplitter
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
         texts = text_splitter.split_text(text)
         return texts
 
@@ -131,8 +131,8 @@ def setup_gemini_api(api_key):
 
 #Example Usage
 if __name__ == "__main__":
-    api_key = os.getenv("GOOGLE_API_KEY") # Ensure GOOGLE_API_KEY is set in .env
-    text_file_path = "your_text_file.txt" # replace with your file path
+    api_key = os.getenv("GOOGLE_API_KEY") 
+    text_file_path = "your_text_file.txt" 
     query = "What is the main topic?"
 
     vectorstore = create_vectorstore(text_file_path)
