@@ -1,6 +1,6 @@
 # Intelligent Document Processor 
 
-The Streamlit application allows users to upload or select a PDF document, extract text using Google Gemini's OCR capabilities, summarize its content, and ask questions about it using Retrieval Augmented Generation (RAG).
+The Streamlit application allows users to upload or select a PDF document, extract text using Google Gemini's OCR capabilities, summarize its content, and ask questions about it using Retrieval Augmented Generation (RAG). 
 
 ## How to run the application?
 
@@ -21,6 +21,8 @@ Navigate to the project directory in your terminal or command prompt (if you're 
     streamlit run web_app.py
     ```
 This will start the Streamlit server, and your application will open in your default web browser.
+
+**Screen recording:** _ https://drive.google.com/file/d/15T3VY0I0kFL5ENnBGvhAlwY8Wt3Idcqj/view?usp=sharing _
 
 **After entering the Google Gemini API key, you can upload your pdf or use the default 'The Gift of Magi' pdf to generate a summary & ask questions related to the pdf.'**
 ## Dependencies
