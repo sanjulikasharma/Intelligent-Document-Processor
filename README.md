@@ -5,9 +5,9 @@ The Streamlit application allows users to upload or select a PDF document, extra
 ## How to run the application?
 
 ### Step 1: Clone the Repository 
-Open your terminal or command prompt and run the following command, replacing `<repository_url>` with the actual URL of your Git repository:
+Open your terminal or command prompt and run the following command:
 
-    ```bash
+    ```
     git clone https://github.com/sanjulikasharma/Intelligent-Document-Processor.git
     ```
 ### Step 2: Install Dependencies using `requirements.txt`
