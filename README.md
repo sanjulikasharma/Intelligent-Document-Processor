@@ -16,6 +16,7 @@ Open your terminal or command prompt and run the following command:
     ```
 ### Step 3: Running the Application 
 Navigate to the project directory in your terminal or command prompt (if you're not already there) and run the Streamlit application: 
+
     ```bash
     streamlit run web_app.py
     ```
