@@ -64,7 +64,7 @@ if "vectorstore" not in st.session_state:
 st.title("PDF Summarizer & Question Answering")
 
 # Input API key
-api_key = st.text_input("Enter your Google Gemini API Key:", type="password")
+api_key = st.text_input("Enter your Google API Key:", type="password")
 
 if not api_key:
     st.warning("Please enter your API key to proceed.")

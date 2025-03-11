@@ -88,9 +88,9 @@ def calculate_cer(ground_truth_file, ocr_text_file):
 def main():
     """Main function to demonstrate OCR and CER calculation."""
 
-    pdf_file_path = Path("D:\Intelligent Document Processor\data\The_Gift_of_the_Magi.pdf")
-    ground_truth_file = Path("D:\Intelligent Document Processor\output\ground_truth.txt")
-    output_path = Path("D:\Intelligent Document Processor\output\extracted_text.txt")
+    pdf_file_path = Path("data\The_Gift_of_the_Magi.pdf")
+    ground_truth_file = Path("output\ground_truth.txt")
+    output_path = Path("output\extracted_text.txt")
 
     api_key = get_api_key()
 
