@@ -51,17 +51,18 @@ This will start the Streamlit server, and your application will open in your def
 -   **Modular Design:** The code is structured into separate modules (`rag.py`, `pdf_to_text_extraction.py`, `summarization.py`) for better organization and maintainability.
 -   **Error Handling:** Basic error handling is implemented to provide informative messages to the user in case of issues like missing files or API key errors.
 
-## Notes
+## How Text is Extracted from the PDFs?
+PDF is first converted into a base64 encoded string as Gemini API accepts base64 encoded data for PDF Processing. Then, Google Gemini API is utilized to perform OCR on the encoded PDF data.
+To evaluate the text extraction, I created a different .txt file containing the story, and computed the accuracy using Character Error Rate (CER). 
+**The CER score was 0.029, that means that the OCR was performed well.**
 
--   Ensure you have a valid Google Gemini API key.
--   The application uses ChromaDB to persist the vector store.
--   The `uploads` and `output` directories are created automatically if they don't exist.
--   The `chroma_db` folder is used to persist the vector database.
--   The `data` folder is used to store default pdfs.
--   The `pdf_to_text_extraction.py` file utilizes Google Gemini's multimodal capabilities to perform OCR on PDF documents by converting them to base64 and sending them to the Gemini API.
--   The `summarization.py` file uses Google Gemini to generate summaries of the extracted text.
--   The optional CER calculation in `pdf_to_text_extraction.py` allows for evaluating the accuracy of the OCR process.
--   **Python version 3.12 or greater is required for this application.**
+## How Summarization is Performed?
+Summarization of the extracted text is performed using Google Gemini through the summarization.py module. The prompt instructed the Gemini to generate a summary with the specifics.
+
+## Question Answering from PDFs with Gemini, Sentence Transformer, ChromaDB and Langchain
+This Streamlit application enables users to ask questions about PDF documents and receive real-time answers. It leverages Google Gemini's powerful OCR and natural language processing capabilities, combined with Retrieval Augmented Generation (RAG), to provide accurate and contextually relevant responses.
+
+
 
 
 
