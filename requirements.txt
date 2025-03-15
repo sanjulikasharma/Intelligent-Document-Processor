@@ -1,6 +1,7 @@
 google-generativeai 
 python-dotenv
 editdistance
+pysqlite3
 chromadb
 langchain
 streamlit
