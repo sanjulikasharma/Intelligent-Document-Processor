@@ -1,59 +1,57 @@
 import os
+import streamlit as st
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
-from dotenv import load_dotenv
 import google.generativeai as genai
+from tempfile import NamedTemporaryFile
 
-# Load environment variables from .env file
-load_dotenv()
+# Directory to persist the Chroma vector store (use a Streamlit cache directory)
+PERSIST_DIRECTORY = st.session_state.get("persist_directory", "chroma_db")
 
-# Directory to persist the Chroma vector store
-PERSIST_DIRECTORY = "chroma_db"
+# Function to load and chunk text from a file (using Streamlit file uploader)
+def load_and_chunk_text(uploaded_file):
+    """Load text from uploaded file and chunk it into smaller pieces."""
+    if uploaded_file is None:
+        return []
 
-# Function to load and chunk text from a file
-def load_and_chunk_text(file_path):
-    """Load text from file and chunk it into smaller pieces."""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
-            text = f.read()
+        text = uploaded_file.getvalue().decode("utf-8")
 
         # Chunk text into smaller parts using RecursiveCharacterTextSplitter
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
         texts = text_splitter.split_text(text)
         return texts
 
-    except FileNotFoundError:
-        print(f"Error: File not found at {file_path}")
-        return []
     except Exception as e:
-        print(f"An error occurred while loading the file: {e}")
+        st.error(f"An error occurred while loading the file: {e}")
         return []
 
-# Function to create or load a Chroma vector store
-def create_vectorstore(text_path):
+# Function to create or load a Chroma vector store (using Streamlit cache)
+def create_vectorstore(uploaded_file):
     """Creates or loads a Chroma vectorstore from text chunks."""
     try:
-        if os.path.exists(PERSIST_DIRECTORY) and os.listdir(PERSIST_DIRECTORY):
+        embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+
+        if "vectorstore" in st.session_state and os.path.exists(PERSIST_DIRECTORY) and os.listdir(PERSIST_DIRECTORY):
             # Load existing vectorstore
-            embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
             vectorstore = Chroma(persist_directory=PERSIST_DIRECTORY, embedding_function=embeddings)
-            print("Loaded existing vectorstore.")
+            st.write("Loaded existing vectorstore.")
             return vectorstore
 
         # Load and chunk the text
-        texts = load_and_chunk_text(text_path)
+        texts = load_and_chunk_text(uploaded_file)
         if not texts:
-            print("No text chunks created from the document.")
+            st.write("No text chunks created from the document.")
             return None
 
         # Create embeddings using HuggingFace and store them in Chroma vectorstore
-        embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
         vectorstore = Chroma.from_texts(texts, embeddings, persist_directory=PERSIST_DIRECTORY)
-        print("Created new vectorstore.")
+        st.session_state["vectorstore"] = vectorstore #Store the vectorstore in streamlit's session_state.
+        st.write("Created new vectorstore.")
         return vectorstore
     except Exception as e:
-        print(f"Error creating/loading vectorstore: {e}")
+        st.error(f"Error creating/loading vectorstore: {e}")
         return None
 
 # Function to retrieve relevant chunks from the vectorstore based on a query
@@ -67,7 +65,7 @@ def retrieve_relevant_chunks(vectorstore, query):
         relevant_chunks = vectorstore.similarity_search(query)
         return relevant_chunks
     except Exception as e:
-        print(f"Error in retrieving relevant chunks: {e}")
+        st.error(f"Error in retrieving relevant chunks: {e}")
         return []
 
 # Function to generate the RAG prompt based on the relevant chunks
@@ -124,21 +122,16 @@ def run_rag_query(query, vectorstore, api_key):
     except Exception as e:
         return f"Error running RAG query: {e}"
 
-# If you need to manually set up the API key for Gemini
-def setup_gemini_api(api_key):
-    """Configure the Google Gemini API with the provided API key."""
-    genai.configure(api_key=api_key)
+# Streamlit UI
+st.title("Document Q&A with Gemini")
 
-#Example Usage
-if __name__ == "__main__":
-    api_key = os.getenv("GOOGLE_API_KEY") 
-    text_file_path = "your_text_file.txt" 
-    query = "What is the main topic?"
+api_key = st.text_input("Enter your Google Gemini API Key:", type="password")
+uploaded_file = st.file_uploader("Upload a text file", type=["txt"])
+query = st.text_input("Enter your question:")
 
-    vectorstore = create_vectorstore(text_file_path)
-
+if uploaded_file and api_key and query:
+    vectorstore = create_vectorstore(uploaded_file)
     if vectorstore:
-        response = run_rag_query(query, vectorstore, api_key)
-        print("Response:", response)
-    else:
-        print("Vectorstore creation failed.")
+        if st.button("Get Answer"):
+            response = run_rag_query(query, vectorstore, api_key)
+            st.write("Response:", response)
